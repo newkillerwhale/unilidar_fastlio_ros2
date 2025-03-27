@@ -1,0 +1,61 @@
+/**:
+    ros__parameters:
+        # ================== Global Settings ==================
+        feature_extract_enable: false
+        max_iteration: 3
+        filter_size_surf: 0.5
+        filter_size_map: 0.5
+        cube_side_length: 1000.0
+        runtime_pos_log_enable: false
+        map_file_path: "./test.pcd"
+
+        # ================== Sensor Topics ==================
+        common:
+            lid_topic: "/unilidar/cloud"          # LiDAR点云话题
+            imu_topic: "/unilidar/imu"            # IMU话题
+            time_sync_en: false                   # 关闭内部时间同步（若需要同步请设为true）
+            time_offset_lidar_to_imu: 0.0          # IMU到LiDAR时间偏移（与您配置的time_lag_imu_to_lidar取反）
+
+        # ================== LiDAR预处理 ==================
+        preprocess:
+            lidar_type: 5                        # 雷达类型（需确认类型编号对应关系）
+            scan_line: 18                         # 扫描线数
+            point_filter_num: 1                   # 点云降采样率（原con_frame_num）
+            blind: 0.5                            # 盲区过滤半径（米）
+            timestamp_unit: 0                     # 时间戳单位：0=秒，1=毫秒，2=微秒，3=纳秒
+
+        # ================== SLAM核心参数 ==================
+        mapping:
+            # IMU参数
+            imu_en: true                          # 启用IMU
+            imu_time_inte: 0.004                  # IMU采样间隔（1/frequency）
+            acc_cov: 0.1                          # 加速度计噪声协方差
+            gyr_cov: 0.1                          # 陀螺仪噪声协方差
+            b_acc_cov: 0.0001                     # 加速度计零偏噪声
+            b_gyr_cov: 0.0001                     # 陀螺仪零偏噪声
+            
+            # 外参标定
+            extrinsic_est_en: false               # 关闭在线外参标定
+            extrinsic_T: [0.007698, 0.014655, -0.00667]  # IMU到LiDAR平移
+            extrinsic_R: [1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]     # IMU到LiDAR旋转矩阵
+            
+            # 环境参数
+            fov_degree: 180.0                       # 有效FOV角度
+            det_range: 100.0                      # 最大探测距离（米）
+            plane_thr: 0.1                        # 平面拟合阈值
+            
+            # 重力对齐
+            gravity_align: true                   # 启用重力对齐
+            gravity: [0.0, 0.0, -9.810]           # 重力向量（与您配置一致）
+
+        # ================== 输出设置 ==================
+        publish:
+            path_en: true                         # 发布轨迹路径
+            scan_publish_en: true                 # 发布原始点云
+            scan_bodyframe_pub_en: true           # 发布IMU坐标系点云
+            dense_publish_en: true                # 发布稠密地图
+
+        # ================== 地图保存 ==================
+        pcd_save:
+            pcd_save_en: true                     # 启用PCD保存
+            interval: -1                          # 全帧保存（注意内存风险）
